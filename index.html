@@ -87,7 +87,15 @@ body {
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
 /* === HERO === */
-.hero { text-align: center; padding-top: 140px; }
+.hero { padding-top: 120px; }
+.hero-split {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 56px;
+    align-items: center;
+    margin-bottom: 72px;
+}
+.hero-text { max-width: 580px; }
 .hero-badge {
     display: inline-block; padding: 5px 14px; border-radius: 20px;
     font-size: 0.72rem; font-weight: 700; letter-spacing: 0.8px;
@@ -100,7 +108,80 @@ body {
     letter-spacing: -1.8px; margin-bottom: 20px;
 }
 .hero h1 span { background: var(--gradient-brand); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.hero-sub { font-size: 1.1rem; color: var(--text-secondary); max-width: 640px; margin: 0 auto 44px; line-height: 1.7; }
+.hero-sub { font-size: 1.1rem; color: var(--text-secondary); line-height: 1.7; margin: 0; }
+
+/* Hero card visual */
+.hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    perspective: 1500px;
+    min-height: 340px;
+}
+.hero-visual::before {
+    content: '';
+    position: absolute;
+    inset: -15% -10%;
+    background:
+        radial-gradient(ellipse 55% 45% at 55% 50%, rgba(167, 139, 250, 0.28), transparent 65%),
+        radial-gradient(ellipse 40% 40% at 40% 60%, rgba(14, 165, 233, 0.18), transparent 60%);
+    pointer-events: none;
+    filter: blur(12px);
+    z-index: 0;
+}
+.hero-card-stack {
+    width: 100%;
+    max-width: 440px;
+    aspect-ratio: 1.586 / 1;
+    position: relative;
+    transform-style: preserve-3d;
+    z-index: 1;
+    cursor: pointer;
+}
+.hero-card-slot {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform 0.75s cubic-bezier(0.25, 0.85, 0.35, 1), z-index 0s linear 0.35s;
+}
+.hero-slot-gold {
+    transform: rotateY(-24deg) rotateX(10deg) rotateZ(-5deg) translate3d(58px, 30px, -90px);
+    z-index: 1;
+}
+.hero-slot-platinum {
+    transform: rotateY(-18deg) rotateX(8deg) rotateZ(-2deg);
+    z-index: 2;
+}
+.hero-card-stack:hover .hero-slot-platinum {
+    transform: rotateY(-28deg) rotateX(10deg) rotateZ(-6deg) translate3d(-82%, 22px, -110px);
+    z-index: 1;
+}
+.hero-card-stack:hover .hero-slot-gold {
+    transform: rotateY(-18deg) rotateX(8deg) rotateZ(-2deg) translate3d(0, 0, 0);
+    z-index: 3;
+}
+.hero-card {
+    width: 100%;
+    height: 100%;
+    animation: heroFloat 6s ease-in-out infinite;
+}
+.hero-card::after {
+    animation: heroShine 5s ease-in-out infinite;
+    animation-delay: 1.8s;
+    transition: none;
+}
+.hero-slot-gold .hero-card::after {
+    animation-delay: 3.6s;
+}
+@keyframes heroFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+}
+@keyframes heroShine {
+    0%, 55% { left: -60%; }
+    80%, 100% { left: 130%; }
+}
 
 .hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; max-width: 920px; margin: 0 auto; }
 .stat-card {
@@ -334,11 +415,262 @@ body {
 .deal .best-for { font-size: 0.78rem; color: var(--text-muted); font-style: italic; margin-bottom: 14px; }
 .deal p { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
 
+/* === CARD PREVIEWS === */
+.cc-previews-wrap {
+    margin-top: 44px;
+    padding: 52px 36px 56px;
+    border-radius: 22px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background:
+        radial-gradient(ellipse 80% 60% at 20% 0%, rgba(167, 139, 250, 0.10), transparent 60%),
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(245, 179, 66, 0.09), transparent 60%),
+        radial-gradient(ellipse 80% 60% at 80% 0%, rgba(45, 212, 167, 0.09), transparent 60%),
+        linear-gradient(180deg, #0a0e17 0%, #060810 100%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        inset 0 40px 80px -30px rgba(0, 0, 0, 0.6);
+}
+.cc-previews-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 50% 28% at 50% 100%, rgba(0, 0, 0, 0.5), transparent 70%);
+    pointer-events: none;
+}
+.cc-previews-heading {
+    text-align: center; font-size: 0.72rem; font-weight: 700;
+    margin-bottom: 28px; color: var(--text-muted);
+    letter-spacing: 2px; text-transform: uppercase;
+    position: relative;
+}
+.cc-previews { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; position: relative; }
+.cc-wrap { display: flex; flex-direction: column; align-items: stretch; gap: 12px; }
+.cc {
+    position: relative;
+    aspect-ratio: 1.586 / 1;
+    background: #0d1721;
+    border-radius: 14px;
+    padding: 14px 18px;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    box-shadow:
+        0 14px 32px rgba(0, 0, 0, 0.55),
+        0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+.cc:hover { transform: translateY(-4px); }
+
+/* Tier-colored glow underneath */
+.cc-platinum.cc, .cc-wrap:has(.cc-platinum) .cc {
+    box-shadow:
+        0 16px 36px rgba(0, 0, 0, 0.55),
+        0 0 45px -8px rgba(197, 200, 209, 0.45),
+        0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.cc-gold.cc, .cc-wrap:has(.cc-gold) .cc {
+    box-shadow:
+        0 16px 36px rgba(0, 0, 0, 0.55),
+        0 0 50px -6px rgba(245, 179, 66, 0.45),
+        0 0 0 1px rgba(245, 179, 66, 0.12);
+}
+.cc-standard.cc, .cc-wrap:has(.cc-standard) .cc {
+    box-shadow:
+        0 16px 36px rgba(0, 0, 0, 0.55),
+        0 0 45px -8px rgba(45, 212, 167, 0.40),
+        0 0 0 1px rgba(45, 212, 167, 0.10);
+}
+.cc-platinum.cc:hover, .cc-wrap:has(.cc-platinum) .cc:hover {
+    box-shadow:
+        0 22px 44px rgba(0, 0, 0, 0.6),
+        0 0 65px -4px rgba(197, 200, 209, 0.65),
+        0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+.cc-gold.cc:hover, .cc-wrap:has(.cc-gold) .cc:hover {
+    box-shadow:
+        0 22px 44px rgba(0, 0, 0, 0.6),
+        0 0 70px -2px rgba(245, 179, 66, 0.7),
+        0 0 0 1px rgba(245, 179, 66, 0.25);
+}
+.cc-standard.cc:hover, .cc-wrap:has(.cc-standard) .cc:hover {
+    box-shadow:
+        0 22px 44px rgba(0, 0, 0, 0.6),
+        0 0 65px -4px rgba(45, 212, 167, 0.6),
+        0 0 0 1px rgba(45, 212, 167, 0.2);
+}
+
+/* Shine sweep on hover */
+.cc::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: -60%;
+    width: 50%;
+    background: linear-gradient(
+        110deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.08) 35%,
+        rgba(255, 255, 255, 0.55) 50%,
+        rgba(255, 255, 255, 0.08) 65%,
+        transparent 100%
+    );
+    transform: skewX(-18deg);
+    transition: left 0.9s cubic-bezier(0.25, 0.85, 0.4, 1);
+    pointer-events: none;
+    z-index: 5;
+    mix-blend-mode: overlay;
+}
+.cc:hover::after { left: 130%; }
+.cc-platinum {
+    --cc: #2a3142;
+    background:
+        linear-gradient(115deg, transparent 28%, rgba(255,255,255,0.55) 47%, rgba(255,255,255,0.15) 53%, transparent 58%, rgba(255,255,255,0.25) 72%, transparent 82%),
+        linear-gradient(135deg, #9ea3ad 0%, #dde0e6 18%, #b2b7c0 35%, #eef0f4 52%, #9ca1ab 70%, #c7cbd2 88%, #a4a9b3 100%);
+}
+.cc-platinum .cc-number,
+.cc-platinum .cc-name,
+.cc-platinum .cc-valid-date { color: #141826; text-shadow: 0 1px 0 rgba(255,255,255,0.35); }
+.cc-platinum .cc-tagline { color: rgba(20, 24, 38, 0.55); }
+.cc-platinum .cc-valid-label { color: rgba(20, 24, 38, 0.6); }
+.cc-platinum .cc-chip-graphic { background: #6d7380; }
+.cc-platinum .cc-chip-graphic::before,
+.cc-platinum .cc-chip-graphic::after { background: #2a3142; }
+
+.cc-gold {
+    --cc: #4a3208;
+    background:
+        linear-gradient(115deg, transparent 28%, rgba(255,240,180,0.6) 47%, rgba(255,240,180,0.2) 53%, transparent 58%, rgba(255,240,180,0.3) 72%, transparent 82%),
+        linear-gradient(135deg, #a87610 0%, #f2c554 18%, #8e6912 35%, #ffdc78 52%, #9c740f 70%, #e5b33e 88%, #b08416 100%);
+}
+.cc-gold .cc-number,
+.cc-gold .cc-name,
+.cc-gold .cc-valid-date { color: #2a1c05; text-shadow: 0 1px 0 rgba(255,235,180,0.35); }
+.cc-gold .cc-tagline { color: rgba(42, 28, 5, 0.6); }
+.cc-gold .cc-valid-label { color: rgba(42, 28, 5, 0.65); }
+.cc-gold .cc-chip-graphic { background: #8b6b10; }
+.cc-gold .cc-chip-graphic::before,
+.cc-gold .cc-chip-graphic::after { background: #3d2a05; }
+
+.cc-standard { --cc: #2dd4a7; }
+.cc-left-bar {
+    position: absolute;
+    left: 0; top: 12px; bottom: 8px;
+    width: 6px;
+    background: var(--cc);
+    border-radius: 0 3px 3px 0;
+}
+.cc-bottom-bar {
+    position: absolute;
+    left: 6px; right: 12px; bottom: 0;
+    height: 6px;
+    background: var(--cc);
+    border-radius: 3px 3px 0 0;
+}
+.cc-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px; padding-left: 6px;
+}
+.cc-window-icon {
+    color: var(--cc); font-size: 0.75rem; font-weight: 500; letter-spacing: 1px;
+    display: inline-flex; align-items: center; gap: 2px;
+}
+.cc-badge-tier {
+    border: 1px solid var(--cc);
+    color: var(--cc);
+    padding: 2px 10px;
+    border-radius: 14px;
+    font-size: 0.52rem;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 4px;
+}
+.cc-chip-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding-left: 6px; }
+.cc-chip-graphic {
+    width: 30px; height: 22px;
+    background: var(--cc);
+    border-radius: 4px;
+    position: relative;
+}
+.cc-chip-graphic::before, .cc-chip-graphic::after {
+    content: ''; position: absolute; background: #0d1721;
+}
+.cc-chip-graphic::before {
+    top: 4px; bottom: 4px; left: 50%; width: 2px;
+    transform: translateX(-50%);
+}
+.cc-chip-graphic::after {
+    left: 4px; right: 4px; top: 50%; height: 2px;
+    transform: translateY(-50%);
+}
+.cc-nfc { width: 14px; height: 14px; color: var(--cc); }
+.cc-number {
+    color: white;
+    font-size: 0.82rem;
+    letter-spacing: 2px;
+    font-weight: 500;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 6px;
+    padding-left: 6px;
+}
+.cc-meta { display: flex; gap: 22px; margin-bottom: 4px; padding-left: 6px; }
+.cc-name { color: white; font-size: 0.6rem; font-weight: 800; letter-spacing: 1px; }
+.cc-valid-label {
+    color: rgba(255,255,255,0.45);
+    font-size: 0.46rem;
+    letter-spacing: 1.2px;
+    font-weight: 700;
+    margin-bottom: 1px;
+}
+.cc-valid-date { color: white; font-size: 0.6rem; font-weight: 800; }
+.cc-tagline {
+    color: rgba(255,255,255,0.38);
+    font-size: 0.48rem;
+    letter-spacing: 1.4px;
+    font-weight: 600;
+    margin-bottom: 2px;
+    padding-left: 6px;
+}
+.cc-brand {
+    color: var(--cc);
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    line-height: 1.1;
+    padding-left: 6px;
+}
+.cc-logo {
+    position: absolute;
+    right: 14px;
+    bottom: 12px;
+    width: 38px;
+    height: 32px;
+    color: var(--cc);
+}
+.cc-caption {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
 /* === RESPONSIVE === */
 @media (max-width: 900px) {
     .hero h1 { font-size: 2.2rem; }
+    .hero-split { grid-template-columns: 1fr; gap: 44px; text-align: center; }
+    .hero-text { max-width: 100%; margin: 0 auto; }
+    .hero-card-stack { max-width: 340px; margin: 0 auto; }
+    .hero-slot-gold { transform: rotateY(-18deg) rotateX(7deg) rotateZ(-4deg) translate3d(44px, 22px, -70px); }
+    .hero-slot-platinum { transform: rotateY(-12deg) rotateX(5deg) rotateZ(-1deg); }
+    .hero-card-stack:hover .hero-slot-platinum { transform: rotateY(-22deg) rotateX(8deg) rotateZ(-5deg) translate3d(-66%, 14px, -90px); }
+    .hero-card-stack:hover .hero-slot-gold { transform: rotateY(-12deg) rotateX(5deg) rotateZ(-1deg) translate3d(0, 0, 0); }
+    .hero-visual { min-height: 260px; }
     .hero-stats { grid-template-columns: repeat(2, 1fr); }
-    .tiers, .deals, .calc-wrap { grid-template-columns: 1fr; }
+    .tiers, .deals, .calc-wrap, .cc-previews { grid-template-columns: 1fr; }
     .steps-row { grid-template-columns: repeat(2, 1fr); }
     .flow-steps { flex-direction: column; align-items: center; }
     .flow-arrow { transform: rotate(90deg); }
@@ -366,11 +698,110 @@ body {
 <!-- ===== HERO ===== -->
 <section class="section active" id="hero">
     <div class="hero">
-        <div class="hero-badge">Carrier Partnership Proposal &mdash; Confidential 2026</div>
-        <h1>Turn Shipping Volume Into<br><span>Guaranteed Revenue.</span></h1>
-        <p class="hero-sub">
-            ShipCard is the first co-branded Visa built exclusively for shippers. Partner with us to become the preferred carrier for 28M+ e-commerce sellers &mdash; with $100M in activated volume on Day One.
-        </p>
+        <div class="hero-split">
+            <div class="hero-text">
+                <div class="hero-badge">Carrier Partnership Proposal &mdash; Confidential 2026</div>
+                <h1>Turn Shipping Volume Into<br><span>Guaranteed Revenue.</span></h1>
+                <p class="hero-sub">
+                    ShipCard is the first co-branded Visa built exclusively for shippers. Partner with us to become the preferred carrier for 28M+ e-commerce sellers &mdash; with $100M in activated volume on Day One.
+                </p>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card-stack">
+
+                    <!-- Gold card (stacked behind) -->
+                    <div class="hero-card-slot hero-slot-gold">
+                        <div class="cc cc-gold hero-card">
+                            <div class="cc-left-bar"></div>
+                            <div class="cc-bottom-bar"></div>
+                            <div class="cc-header">
+                                <span class="cc-window-icon">&#9744; &rarr;</span>
+                                <span class="cc-badge-tier">&#9633; Gold</span>
+                            </div>
+                            <div class="cc-chip-row">
+                                <div class="cc-chip-graphic"></div>
+                                <svg class="cc-nfc" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M 5 4 Q 13 10 5 16"/>
+                                    <path d="M 10 6 Q 14 10 10 14"/>
+                                    <path d="M 14 8 Q 15.5 10 14 12"/>
+                                </svg>
+                            </div>
+                            <div class="cc-number">4716 &nbsp;2814 &nbsp;5930 &nbsp;7284</div>
+                            <div class="cc-meta">
+                                <div>
+                                    <div class="cc-name">YOUR NAME</div>
+                                </div>
+                                <div>
+                                    <div class="cc-valid-label">VALID THRU</div>
+                                    <div class="cc-valid-date">12/29</div>
+                                </div>
+                            </div>
+                            <div class="cc-tagline">THE SHIPPING REWARDS CARD</div>
+                            <div class="cc-brand">SHIPCARD</div>
+                            <svg class="cc-logo" viewBox="0 0 120 96" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M48 30 L48 82 L106 82 L106 30 Z"/>
+                                <path d="M48 30 L60 16 L77 16 L77 30"/>
+                                <path d="M77 16 L94 16 L106 30"/>
+                                <rect x="56" y="42" width="14" height="10"/>
+                                <line x1="56" y1="47" x2="70" y2="47"/>
+                                <line x1="80" y1="44" x2="98" y2="44"/>
+                                <line x1="80" y1="52" x2="98" y2="52"/>
+                                <line x1="80" y1="60" x2="98" y2="60"/>
+                                <path d="M38 50 Q 20 40 4 48 Q 18 58 38 56 Z" fill="currentColor" stroke="none"/>
+                                <line x1="8" y1="68" x2="38" y2="68"/>
+                                <line x1="18" y1="78" x2="38" y2="78"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Platinum card (in front) -->
+                    <div class="hero-card-slot hero-slot-platinum">
+                        <div class="cc cc-platinum hero-card">
+                            <div class="cc-left-bar"></div>
+                            <div class="cc-bottom-bar"></div>
+                            <div class="cc-header">
+                                <span class="cc-window-icon">&#9744; &rarr;</span>
+                                <span class="cc-badge-tier">&#9633; Platinum</span>
+                            </div>
+                            <div class="cc-chip-row">
+                                <div class="cc-chip-graphic"></div>
+                                <svg class="cc-nfc" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M 5 4 Q 13 10 5 16"/>
+                                    <path d="M 10 6 Q 14 10 10 14"/>
+                                    <path d="M 14 8 Q 15.5 10 14 12"/>
+                                </svg>
+                            </div>
+                            <div class="cc-number">4716 &nbsp;2814 &nbsp;5930 &nbsp;7284</div>
+                            <div class="cc-meta">
+                                <div>
+                                    <div class="cc-name">YOUR NAME</div>
+                                </div>
+                                <div>
+                                    <div class="cc-valid-label">VALID THRU</div>
+                                    <div class="cc-valid-date">12/29</div>
+                                </div>
+                            </div>
+                            <div class="cc-tagline">THE SHIPPING REWARDS CARD</div>
+                            <div class="cc-brand">SHIPCARD</div>
+                            <svg class="cc-logo" viewBox="0 0 120 96" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M48 30 L48 82 L106 82 L106 30 Z"/>
+                                <path d="M48 30 L60 16 L77 16 L77 30"/>
+                                <path d="M77 16 L94 16 L106 30"/>
+                                <rect x="56" y="42" width="14" height="10"/>
+                                <line x1="56" y1="47" x2="70" y2="47"/>
+                                <line x1="80" y1="44" x2="98" y2="44"/>
+                                <line x1="80" y1="52" x2="98" y2="52"/>
+                                <line x1="80" y1="60" x2="98" y2="60"/>
+                                <path d="M38 50 Q 20 40 4 48 Q 18 58 38 56 Z" fill="currentColor" stroke="none"/>
+                                <line x1="8" y1="68" x2="38" y2="68"/>
+                                <line x1="18" y1="78" x2="38" y2="78"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
         <div class="hero-stats">
             <div class="stat-card">
                 <div class="stat-value">$201B+</div>
@@ -531,17 +962,17 @@ body {
             </thead>
             <tbody>
                 <tr>
-                    <td>Up to $10M / month</td>
+                    <td>Up to $50,000 / month</td>
                     <td><span style="color:var(--brand-primary); font-weight:600;">2.0%</span></td>
                     <td>$120M</td>
                 </tr>
                 <tr>
-                    <td>$10M &ndash; $50M / month</td>
+                    <td>$50,000 &ndash; $100,000 / month</td>
                     <td><span style="color:var(--brand-primary); font-weight:600;">3.5%</span></td>
                     <td>$360M &ndash; $600M</td>
                 </tr>
                 <tr>
-                    <td>$50M+ / month</td>
+                    <td>$100,000+ / month</td>
                     <td><span style="color:var(--brand-primary); font-weight:600;">5.0%+</span></td>
                     <td>$600M+</td>
                 </tr>
@@ -633,6 +1064,153 @@ body {
             </ul>
         </div>
     </div>
+
+    <!-- ===== CARD PREVIEWS ===== -->
+    <div class="cc-previews-wrap">
+        <div class="cc-previews-heading">Card Previews by Tier</div>
+        <div class="cc-previews">
+
+            <!-- PLATINUM CARD -->
+            <div class="cc-wrap">
+                <div class="cc cc-platinum">
+                    <div class="cc-left-bar"></div>
+                    <div class="cc-bottom-bar"></div>
+                    <div class="cc-header">
+                        <span class="cc-window-icon">&#9744; &rarr;</span>
+                        <span class="cc-badge-tier">&#9633; Platinum</span>
+                    </div>
+                    <div class="cc-chip-row">
+                        <div class="cc-chip-graphic"></div>
+                        <svg class="cc-nfc" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 5 4 Q 13 10 5 16"/>
+                            <path d="M 10 6 Q 14 10 10 14"/>
+                            <path d="M 14 8 Q 15.5 10 14 12"/>
+                        </svg>
+                    </div>
+                    <div class="cc-number">4716 &nbsp;2814 &nbsp;5930 &nbsp;7284</div>
+                    <div class="cc-meta">
+                        <div>
+                            <div class="cc-name">YOUR NAME</div>
+                        </div>
+                        <div>
+                            <div class="cc-valid-label">VALID THRU</div>
+                            <div class="cc-valid-date">12/29</div>
+                        </div>
+                    </div>
+                    <div class="cc-tagline">THE SHIPPING REWARDS CARD</div>
+                    <div class="cc-brand">SHIPCARD</div>
+                    <svg class="cc-logo" viewBox="0 0 120 96" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M48 30 L48 82 L106 82 L106 30 Z"/>
+                        <path d="M48 30 L60 16 L77 16 L77 30"/>
+                        <path d="M77 16 L94 16 L106 30"/>
+                        <rect x="56" y="42" width="14" height="10"/>
+                        <line x1="56" y1="47" x2="70" y2="47"/>
+                        <line x1="80" y1="44" x2="98" y2="44"/>
+                        <line x1="80" y1="52" x2="98" y2="52"/>
+                        <line x1="80" y1="60" x2="98" y2="60"/>
+                        <path d="M38 50 Q 20 40 4 48 Q 18 58 38 56 Z" fill="currentColor" stroke="none"/>
+                        <line x1="8" y1="68" x2="38" y2="68"/>
+                        <line x1="18" y1="78" x2="38" y2="78"/>
+                    </svg>
+                </div>
+                <div class="cc-caption">Platinum Tier</div>
+            </div>
+
+            <!-- GOLD CARD -->
+            <div class="cc-wrap">
+                <div class="cc cc-gold">
+                    <div class="cc-left-bar"></div>
+                    <div class="cc-bottom-bar"></div>
+                    <div class="cc-header">
+                        <span class="cc-window-icon">&#9744; &rarr;</span>
+                        <span class="cc-badge-tier">&#9633; Gold</span>
+                    </div>
+                    <div class="cc-chip-row">
+                        <div class="cc-chip-graphic"></div>
+                        <svg class="cc-nfc" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 5 4 Q 13 10 5 16"/>
+                            <path d="M 10 6 Q 14 10 10 14"/>
+                            <path d="M 14 8 Q 15.5 10 14 12"/>
+                        </svg>
+                    </div>
+                    <div class="cc-number">4716 &nbsp;2814 &nbsp;5930 &nbsp;7284</div>
+                    <div class="cc-meta">
+                        <div>
+                            <div class="cc-name">YOUR NAME</div>
+                        </div>
+                        <div>
+                            <div class="cc-valid-label">VALID THRU</div>
+                            <div class="cc-valid-date">12/29</div>
+                        </div>
+                    </div>
+                    <div class="cc-tagline">THE SHIPPING REWARDS CARD</div>
+                    <div class="cc-brand">SHIPCARD</div>
+                    <svg class="cc-logo" viewBox="0 0 120 96" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M48 30 L48 82 L106 82 L106 30 Z"/>
+                        <path d="M48 30 L60 16 L77 16 L77 30"/>
+                        <path d="M77 16 L94 16 L106 30"/>
+                        <rect x="56" y="42" width="14" height="10"/>
+                        <line x1="56" y1="47" x2="70" y2="47"/>
+                        <line x1="80" y1="44" x2="98" y2="44"/>
+                        <line x1="80" y1="52" x2="98" y2="52"/>
+                        <line x1="80" y1="60" x2="98" y2="60"/>
+                        <path d="M38 50 Q 20 40 4 48 Q 18 58 38 56 Z" fill="currentColor" stroke="none"/>
+                        <line x1="8" y1="68" x2="38" y2="68"/>
+                        <line x1="18" y1="78" x2="38" y2="78"/>
+                    </svg>
+                </div>
+                <div class="cc-caption">Gold Tier</div>
+            </div>
+
+            <!-- STANDARD CARD (default teal) -->
+            <div class="cc-wrap">
+                <div class="cc cc-standard">
+                    <div class="cc-left-bar"></div>
+                    <div class="cc-bottom-bar"></div>
+                    <div class="cc-header">
+                        <span class="cc-window-icon">&#9744; &rarr;</span>
+                        <span class="cc-badge-tier">&#9633; Standard</span>
+                    </div>
+                    <div class="cc-chip-row">
+                        <div class="cc-chip-graphic"></div>
+                        <svg class="cc-nfc" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 5 4 Q 13 10 5 16"/>
+                            <path d="M 10 6 Q 14 10 10 14"/>
+                            <path d="M 14 8 Q 15.5 10 14 12"/>
+                        </svg>
+                    </div>
+                    <div class="cc-number">4716 &nbsp;2814 &nbsp;5930 &nbsp;7284</div>
+                    <div class="cc-meta">
+                        <div>
+                            <div class="cc-name">YOUR NAME</div>
+                        </div>
+                        <div>
+                            <div class="cc-valid-label">VALID THRU</div>
+                            <div class="cc-valid-date">12/29</div>
+                        </div>
+                    </div>
+                    <div class="cc-tagline">THE SHIPPING REWARDS CARD</div>
+                    <div class="cc-brand">SHIPCARD</div>
+                    <svg class="cc-logo" viewBox="0 0 120 96" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M48 30 L48 82 L106 82 L106 30 Z"/>
+                        <path d="M48 30 L60 16 L77 16 L77 30"/>
+                        <path d="M77 16 L94 16 L106 30"/>
+                        <rect x="56" y="42" width="14" height="10"/>
+                        <line x1="56" y1="47" x2="70" y2="47"/>
+                        <line x1="80" y1="44" x2="98" y2="44"/>
+                        <line x1="80" y1="52" x2="98" y2="52"/>
+                        <line x1="80" y1="60" x2="98" y2="60"/>
+                        <path d="M38 50 Q 20 40 4 48 Q 18 58 38 56 Z" fill="currentColor" stroke="none"/>
+                        <line x1="8" y1="68" x2="38" y2="68"/>
+                        <line x1="18" y1="78" x2="38" y2="78"/>
+                    </svg>
+                </div>
+                <div class="cc-caption">Standard Tier</div>
+            </div>
+
+        </div>
+    </div>
+
     <div style="text-align:center; margin-top: 20px; font-size: 0.82rem; color: var(--text-muted);">
         Tiers are non-exclusive across carrier types (parcel vs. regional vs. last-mile). One Platinum per category. All terms under mutual NDA.
     </div>
